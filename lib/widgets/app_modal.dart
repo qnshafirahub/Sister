@@ -51,7 +51,6 @@ class PillButton extends StatelessWidget {
   }
 }
 
-/// Dialog sukses: ikon centang, judul, pesan, dan tombol "Tutup".
 class StatusModal extends StatelessWidget {
   final String title, message;
   final IconData icon;
@@ -61,22 +60,25 @@ class StatusModal extends StatelessWidget {
     required this.title,
     required this.message,
     this.icon = Icons.check_circle,
-    this.iconColor = AppColors.accent,
+    this.iconColor = const Color(0xFF0E9A0E),
   });
 
   @override
   Widget build(BuildContext context) {
     return Column(mainAxisSize: MainAxisSize.min, children: [
-      Icon(icon, size: 90, color: iconColor),
-      const SizedBox(height: 10),
-      Text(title,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
       const SizedBox(height: 6),
-      Text(message, textAlign: TextAlign.center),
-      const SizedBox(height: 16),
+      Icon(icon, size: 80, color: iconColor),
+      const SizedBox(height: 12),
+      Text(title,
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+      const SizedBox(height: 6),
+      Text(message,
+          textAlign: TextAlign.center,
+          style: const TextStyle(fontSize: 11, color: Colors.black45)),
+      const SizedBox(height: 24),
       SizedBox(
           width: double.infinity,
-          child: PillButton('Tutup', () => Navigator.pop(context), solid: true)),
+          child: PillButton('Tutup', () => Navigator.pop(context))),
     ]);
   }
 }

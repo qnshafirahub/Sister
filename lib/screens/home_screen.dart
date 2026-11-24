@@ -3,8 +3,20 @@ import '../auth/auth_service.dart';
 import '../core/app_colors.dart';
 
 class HomeScreen extends StatelessWidget {
-  final String? pulangTime;
-  const HomeScreen({super.key, this.pulangTime});
+   final DateTime? masukAt;
+  final DateTime? pulangAt;
+  const HomeScreen({super.key, this.masukAt, this.pulangAt});
+
+  static const _batasJam = 6;
+  static const _batasMenit = 0;
+
+  String _two(int n) => n.toString().padLeft(2, '0');
+
+  String _fmt(DateTime d) =>
+      '${_two(d.hour)}.${_two(d.minute)} | ${_two(d.day)}/${_two(d.month)}/${d.year}';
+
+  bool _tepatWaktu(DateTime d) =>
+      d.hour < _batasJam || (d.hour == _batasJam && d.minute <= _batasMenit);
 
   static const _shadow = [
     BoxShadow(
@@ -97,6 +109,17 @@ class HomeScreen extends StatelessWidget {
     final now = DateTime.now();
     final tgl =
         '${now.day.toString().padLeft(2, '0')}/${now.month.toString().padLeft(2, '0')}';
+            final masukRow = masukAt == null
+        ? _presRow(
+            'Presensi Masuk', '--.-- | --/--/----', 'Belum Presensi', false)
+        : _presRow('Presensi Masuk', _fmt(masukAt!),
+            _tepatWaktu(masukAt!) ? 'Tepat Waktu' : 'Terlambat',
+            _tepatWaktu(masukAt!));
+
+    final pulangRow = pulangAt == null
+        ? _presRow(
+            'Presensi Pulang', '--.-- | --/--/----', 'Belum Presensi', false)
+        : _presRow('Presensi Pulang', _fmt(pulangAt!), 'Sudah Presensi', true);
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(children: [
@@ -145,17 +168,12 @@ class HomeScreen extends StatelessWidget {
           ]),
           const SizedBox(height: 36),
           _title('Presensi'),
-          _card(Padding(
+                  _card(Padding(
             padding: const EdgeInsets.all(20),
             child: Column(children: [
-              _presRow(
-                  'Presensi Masuk', '05.50 | 06/11/2026', 'Tepat Waktu', true),
+              masukRow,
               const SizedBox(height: 30),
-              pulangTime == null
-                  ? _presRow('Presensi Pulang', '--:-- | --/--/----',
-                      'Belum Presensi', false)
-                  : _presRow(
-                      'Presensi Pulang', pulangTime!, 'Tepat Waktu', true),
+              pulangRow,
             ]),
           )),
           _title('Jurnal PKL'),
